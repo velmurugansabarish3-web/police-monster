@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POLICE | Smart Classroom Monitor</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #080b12;
+  color: white;
+  min-height: 100vh;
+}
+
+header {
+  background: #111827;
+  padding: 22px;
+  border-bottom: 2px solid #e11d48;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  color: #ff304f;
+  font-size: 27px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+header span {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 25px;
+}
+
+.welcome {
+  margin: 20px 0;
+}
+
+.welcome h1 {
+  font-size: 27px;
+  margin-bottom: 10px;
+}
+
+.welcome p {
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+.notice {
+  background: #29200d;
+  border: 1px solid #8a641d;
+  padding: 14px;
+  border-radius: 10px;
+  color: #facc15;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 20px 0;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin: 25px 0;
+}
+
+.card {
+  background: #151c2b;
+  border: 1px solid #293449;
+  border-radius: 13px;
+  padding: 22px;
+}
+
+.card p {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.card h2 {
+  font-size: 32px;
+  margin-top: 12px;
+  color: #ff405e;
+}
+
+.monitor {
+  background: #151c2b;
+  padding: 30px;
+  text-align: center;
+  border-radius: 15px;
+  border: 1px solid #293449;
+}
+
+.mic {
+  font-size: 55px;
+  margin: 15px;
+}
+
+.status {
+  color: #facc15;
+  margin: 12px;
+  font-weight: bold;
+}
+
+button {
+  padding: 13px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 5px;
+}
+
+.start {
+  background: #16a34a;
+  color: white;
+}
+
+.stop {
+  background: #dc2626;
+  color: white;
+}
+
+.clear {
+  background: #374151;
+  color: white;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.alert {
+  display: none;
+  margin: 20px 0;
+  padding: 18px;
+  background: #5b1021;
+  border: 1px solid #ff304f;
+  border-radius: 10px;
+  color: #ff7188;
+  font-weight: bold;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  from { opacity: 1; }
+  to { opacity: .65; }
+}
+
+.section {
+  margin-top: 30px;
+}
+
+.section h2 {
+  margin-bottom: 15px;
+}
+
+.transcript {
+  background: #151c2b;
+  border: 1px solid #293449;
+  border-radius: 10px;
+  padding: 18px;
+  min-height: 100px;
+  color: #d1d5db;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.event {
+  background: #151c2b;
+  padding: 15px;
+  border-left: 3px solid #ff304f;
+  margin: 10px 0;
+  border-radius: 7px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+footer {
+  text-align: center;
+  color: #6b7280;
+  padding: 30px;
+  font-size: 12px;
+}
+
+@media(max-width:600px) {
+  .container { padding: 15px; }
+  .welcome h1 { font-size: 22px; }
+  header { padding: 16px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🚨 POLICE</div>
+  <span>SMART CLASSROOM MONITOR</span>
+</header>
+
+<div class="container">
+
+  <div class="welcome">
+    <h1>Classroom Monitoring Dashboard</h1>
+    <p>Monitor Tamil speech and encourage English communication.</p>
+  </div>
+
+  <div class="notice">
+    ⚠️ Classroom monitoring must be announced to students and
+    authorized by the institution. No audio is saved by this demo.
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <p>Tamil Speech Events</p>
+      <h2 id="count">0</h2>
+    </div>
+
+    <div class="card">
+      <p>Monitoring Status</p>
+      <h2 id="monitorStatus" style="font-size:20px;color:#facc15">
+        OFFLINE
+      </h2>
+    </div>
+
+    <div class="card">
+      <p>Estimated Speech Duration</p>
+      <h2 id="duration">0 sec</h2>
+    </div>
+
+  </div>
+
+  <div class="monitor">
+
+    <div class="mic">🎤</div>
+
+    <h2>Classroom Voice Monitor</h2>
+
+    <p class="status" id="status">
+      Monitoring is currently OFF
+    </p>
+
+    <button class="start" id="startBtn" onclick="startMonitor()">
+      ▶ START MONITORING
+    </button>
+
+    <button class="stop" id="stopBtn" onclick="stopMonitor()" disabled>
+      ■ STOP MONITORING
+    </button>
+
+  </div>
+
+  <div class="alert" id="alert">
+    🚨 TAMIL SPEECH DETECTED!
+  </div>
+
+  <div class="section">
+    <h2>📝 Tamil Speech Transcript</h2>
+    <div class="transcript" id="transcript">
+      Waiting for classroom speech...
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>📊 Detection History</h2>
+    <div id="history">
+      No Tamil speech detected yet.
+    </div>
+
+    <button class="clear" onclick="clearHistory()">
+      Clear Report
+    </button>
+  </div>
+
+</div>
+
+<footer>
+  POLICE Smart Classroom Monitor | Tamil Speech Detection
+</footer>
+
+<script>
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+let recognition;
+let running = false;
+let count = 0;
+let totalDuration = 0;
+let restartTimer = null;
+
+const countElement = document.getElementById("count");
+const statusElement = document.getElementById("status");
+const monitorStatus = document.getElementById("monitorStatus");
+const transcriptElement = document.getElementById("transcript");
+const historyElement = document.getElementById("history");
+const alertElement = document.getElementById("alert");
+
+function isTamil(text) {
+  return /[\u0B80-\u0BFF]/.test(text);
+}
+
+function startMonitor() {
+
+  if (!SpeechRecognition) {
+    alert("Speech recognition is not supported. Please use Google Chrome on a supported device.");
+    return;
+  }
+
+  if (running) return;
+
+  running = true;
+
+  document.getElementById("startBtn").disabled = true;
+  document.getElementById("stopBtn").disabled = false;
+
+  statusElement.textContent = "Listening to classroom...";
+  monitorStatus.textContent = "ACTIVE";
+  monitorStatus.style.color = "#16a34a";
+
+  createRecognition();
+}
+
+function createRecognition() {
+
+  recognition = new SpeechRecognition();
+
+  // Tamil speech recognition
+  recognition.lang = "ta-IN";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onresult = function(event) {
+
+    let interimText = "";
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+
+      const result = event.results[i];
+      const text = result[0].transcript.trim();
+
+      if (result.isFinal && text) {
+
+        if (isTamil(text)) {
+          detectTamil(text);
+        } else {
+          interimText += text + " ";
+        }
+
+      } else {
+        interimText += text + " ";
+      }
+    }
+
+    if (interimText.trim()) {
+      transcriptElement.textContent =
+        "Recognizing: " + interimText;
+    }
+  };
+
+  recognition.onerror = function(event) {
+
+    if (event.error === "not-allowed" ||
+        event.error === "service-not-allowed") {
+
+      running = false;
+      statusElement.textContent = "Microphone permission denied";
+      monitorStatus.textContent = "OFFLINE";
+      document.getElementById("startBtn").disabled = false;
+      document.getElementById("stopBtn").disabled = true;
+
+    } else if (event.error !== "no-speech" &&
+               event.error !== "aborted") {
+
+      statusElement.textContent =
+        "Recognition error: " + event.error;
+    }
+  };
+
+  recognition.onend = function() {
+
+    if (running) {
+      restartTimer = setTimeout(() => {
+        if (running) {
+          createRecognition();
+        }
+      }, 500);
+    }
+  };
+
+  try {
+    recognition.start();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function detectTamil(text) {
+
+  count++;
+
+  // Approximate duration, not actual measured speaking time
+  const estimatedSeconds = Math.max(
+    1,
+    Math.ceil(text.length / 8)
+  );
+
+  totalDuration += estimatedSeconds;
+
+  countElement.textContent = count;
+
+  document.getElementById("duration").textContent =
+    totalDuration + " sec (estimated)";
+
+  const now = new Date();
+
+  const time = now.toLocaleTimeString();
+  const date = now.toLocaleDateString();
+
+  transcriptElement.textContent = text;
+
+  alertElement.style.display = "block";
+
+  statusElement.textContent = "Tamil speech detected!";
+  
+  setTimeout(() => {
+    alertElement.style.display = "none";
+
+    if (running) {
+      statusElement.textContent = "Listening to classroom...";
+    }
+  }, 3000);
+
+  const eventDiv = document.createElement("div");
+  eventDiv.className = "event";
+
+  const title = document.createElement("strong");
+  title.textContent = "🚨 Tamil Speech Detected";
+
+  const sentence = document.createElement("p");
+  sentence.textContent = text;
+
+  const details = document.createElement("small");
+  details.textContent =
+    "Date: " + date + " | Time: " + time +
+    " | Estimated duration: " + estimatedSeconds + " sec";
+
+  eventDiv.append(title, sentence, details);
+
+  historyElement.prepend(eventDiv);
+
+  if (historyElement.textContent.includes("No Tamil speech detected yet.")) {
+    historyElement.textContent = "";
+    historyElement.appendChild(eventDiv);
+  }
+}
+
+function stopMonitor() {
+
+  running = false;
+
+  clearTimeout(restartTimer);
+
+  if (recognition) {
+    recognition.onend = null;
+    recognition.stop();
+  }
+
+  document.getElementById("startBtn").disabled = false;
+  document.getElementById("stopBtn").disabled = true;
+
+  statusElement.textContent = "Monitoring stopped";
+  monitorStatus.textContent = "OFFLINE";
+  monitorStatus.style.color = "#facc15";
+
+  alertElement.style.display = "none";
+}
+
+function clearHistory() {
+
+  count = 0;
+  totalDuration = 0;
+
+  countElement.textContent = "0";
+  document.getElementById("duration").textContent = "0 sec";
+
+  historyElement.textContent =
+    "No Tamil speech detected yet.";
+
+  transcriptElement.textContent =
+    "Waiting for classroom speech...";
+
+  alertElement.style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
