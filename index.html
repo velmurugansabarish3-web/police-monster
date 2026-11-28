@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAARA AI</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <h2 class="logo">✦ SAARA AI</h2>
+
+    <button onclick="showPage('chat')">💬 AI Chat</button>
+    <button onclick="showPage('photo')">🖼️ Photo Editor</button>
+    <button onclick="showPage('video')">🎬 Video Studio</button>
+    <button onclick="showPage('voice')">🎙️ Voice Notes</button>
+
+    <div class="sidebar-bottom">
+      <p>All-in-One AI</p>
+      <small>Your creative assistant</small>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <h3 id="pageTitle">AI Chat</h3>
+      <span class="status">● SAARA Online</span>
+    </header>
+
+    <section id="chat" class="page active">
+
+      <div class="welcome">
+        <h1>Hello, I'm SAARA.</h1>
+        <p>What would you like to create today?</p>
+      </div>
+
+      <div id="messages" class="messages"></div>
+
+      <div class="chat-input">
+        <textarea id="userInput"
+          placeholder="Ask SAARA anything..."
+          rows="1"></textarea>
+        <button onclick="sendMessage()">➤</button>
+      </div>
+
+    </section>
+
+    <section id="photo" class="page">
+      <h2>AI Photo Studio</h2>
+      <p>Upload an image and apply simple photo edits.</p>
+
+      <input type="file" id="photoFile" accept="image/*">
+
+      <div class="editor">
+        <canvas id="photoCanvas"></canvas>
+      </div>
+
+      <div class="tools">
+        <button onclick="editPhoto('gray')">Grayscale</button>
+        <button onclick="editPhoto('bright')">Brightness</button>
+        <button onclick="editPhoto('reset')">Reset</button>
+        <button onclick="downloadPhoto()">Download</button>
+      </div>
+    </section>
+
+    <section id="video" class="page">
+      <h2>Video Studio</h2>
+      <p>Upload a video, preview it and download it.</p>
+
+      <input type="file" id="videoFile" accept="video/*">
+
+      <video id="videoPreview" controls></video>
+
+      <p class="note">
+        Basic video preview is available. AI video generation
+        and advanced editing require a video service.
+      </p>
+    </section>
+
+    <section id="voice" class="page">
+      <h2>Voice Studio</h2>
+      <p>Record a voice note or listen to AI voice.</p>
+
+      <button id="recordButton" onclick="toggleRecording()">
+        🎙️ Start Recording
+      </button>
+
+      <audio id="audioPreview" controls></audio>
+
+      <textarea id="voiceText"
+        placeholder="Your voice note will appear here..."></textarea>
+
+      <button onclick="speakText()">🔊 Speak Text</button>
+    </section>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
